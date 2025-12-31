@@ -34,6 +34,34 @@ The user inputs are specified in ``run_sampling.sh``
 The files ``my_plotting.jl`` and ``my_tables.jl`` contain code for analyzing the sampling results. This includes creating trace and density plots for the HMM parameters and tables containing the posterior means, medians, high-density intervals, effective sample size percentage and R-hat. See below for example code. 
 
 ```
+using Pkg
+cd(@__DIR__)
+Pkg.activate("./env-hmm-j.1.10/")
+
+using DelimitedFiles
+using StatsPlots
+using Turing
+using Random
+using Clustering
+using ReverseDiff
+using HiddenMarkovModels
+using FillArrays
+using LinearAlgebra
+using LogExpFunctions
+using JLD2
+using KernelDensity
+using ArgParse
+using Printf
+using StateSpaceModels
+using HypothesisTests
+Random.seed!(1)
+
+include("./src/utils.jl")
+include("./src/base_hmm.jl")
+include("./src/my_plotting.jl")
+include("./src/my_tables.jl")
+
+fig_save_name="my-results"
 chain_load_name=pwd()*"/sample-results/"*fig_save_name*".jld2"
 fig_save_dir=pwd()*"/figures/"
 table_save_dir=pwd()*"/tables/"
