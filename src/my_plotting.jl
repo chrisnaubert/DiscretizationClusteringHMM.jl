@@ -96,15 +96,16 @@ end
 
 """
 
-    plot_scatter_and_probs(chain_load_name,fig_save_dir,fig_save_name)
+    plot_simulated_series(chain_load_name::String,fig_save_dir::String,fig_save_name::String,t_sim::Int;my_font_size=12)
 
-code for plotting the time series with cluster assignments and posterior probabilities of the different states
+code for plotting a simulated series using the estimated hidden markov model. the code creates a time series plot of the simulated states and a kde comparison plot between the simulated observables and the data
 
 args:
     chain_load_name: path to the chain to plot
     fig_save_dir: directory to where the figures will be saved
     fig_save_name: prefix for the figures. the figures will be saved as 
         - fig_save_dir/fig_save_name-simulated-series.pdf
+        - fig_save_dir/fig_save_name-density-comparison.pdf
     t_sim: length of the simulation
 
 returns:
@@ -208,8 +209,23 @@ function plot_simulated_series(chain_load_name::String,fig_save_dir::String,fig_
     return nothing
 end
 
+"""
+    plot_trace_and_density(chain_load_name::String,fig_save_dir::String,fig_save_name::String;my_font_size=12,linewidth=2.0,right_margin=5.0Plots.mm)
 
-function plot_trace_and_density(chain_load_name::String,fig_save_dir::String,fig_save_name::String;my_font_size=12,linewidth=2.0,fontsize=12,right_margin=5.0Plots.mm)
+create trace and density plots for the estimated transition probabilities, state means and state standard deviations
+
+args: 
+    chain_load_name: path to the chain to plot
+    fig_save_dir: directory to where the figures will be saved
+    fig_save_name: prefix for the figures. the figures will be saved as 
+        - fig_save_dir/fig_save_name-[parameter name]-density.pdf
+        - fig_save_dir/fig_save_name-[parameter name]-trace.pdf
+
+returns:
+    nothing
+
+"""
+function plot_trace_and_density(chain_load_name::String,fig_save_dir::String,fig_save_name::String;my_font_size=12,linewidth=2.0,right_margin=5.0Plots.mm)
 
     # load the results
     my_results=JLD2.load(chain_load_name)
@@ -244,7 +260,7 @@ function plot_trace_and_density(chain_load_name::String,fig_save_dir::String,fig
 
     for idx_u in 1:n_params
         # create the density plot
-        p=StatsPlots.plot(chain_params.:value.:data[:,idx_u,:][:],seriestype=:density,label="Density",linewidth=linewidth,legend=:outertop,legend_columns=3,legendfontsize=fontsize,tickfontsize=fontsize,right_margin=right_margin)
+        p=StatsPlots.plot(chain_params.:value.:data[:,idx_u,:][:],seriestype=:density,label="Density",linewidth=linewidth,legend=:outertop,legend_columns=3,legendfontsize=my_font_size,tickfontsize=my_font_size,right_margin=right_margin)
         
         # vertical line for lower hpd interval
         vline!(lower_hpd[idx_u:idx_u],label="Lower HPD",linewidth=linewidth,linestyle=:dashdot)
@@ -254,10 +270,10 @@ function plot_trace_and_density(chain_load_name::String,fig_save_dir::String,fig
         
         
         # save the plot
-        savefig(p,fig_save_dir*fig_save_name*"-"*names_all[idx_u]*".pdf")
+        savefig(p,fig_save_dir*fig_save_name*"-"*names_all[idx_u]*"-density.pdf")
 
         # trace plots
-        p_trace=plot(chain_params.:value.:data[:,idx_u,:][:],label="Trace",linewidth=linewidth,legend=:outertop,legend_columns=3,legendfontsize=fontsize,tickfontsize=fontsize)
+        p_trace=plot(chain_params.:value.:data[:,idx_u,:][:],label="Trace",linewidth=linewidth,legend=:outertop,legend_columns=3,legendfontsize=my_font_size,tickfontsize=my_font_size)
         
         # horizontal line for lower hpd interval
         hline!(lower_hpd[idx_u:idx_u],label="Lower HPD",linewidth=linewidth,linestyle=:dashdot)
@@ -266,7 +282,7 @@ function plot_trace_and_density(chain_load_name::String,fig_save_dir::String,fig
         hline!(upper_hpd[idx_u:idx_u],label="Upper HPD",linewidth=linewidth,linestyle=:dashdot)
 
         # save the plot
-        savefig(p_trace,fig_save_dir*fig_save_name*"-"*names_all[idx_u]*"_trace.pdf")
+        savefig(p_trace,fig_save_dir*fig_save_name*"-"*names_all[idx_u]*"-trace.pdf")
 
     end
 
