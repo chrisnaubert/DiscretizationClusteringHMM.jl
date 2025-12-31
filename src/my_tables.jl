@@ -13,6 +13,11 @@ retunrs:
 """
 function create_posterior_table(chain_load_name::String,table_save_dir::String,table_save_name::String)
     
+    # create the directory where the tables will be saved if it doesn't exist
+    if !isdir(table_save_dir)
+        mkdir(table_save_dir)
+    end
+
     # load the results
     my_results=JLD2.load(chain_load_name)
 

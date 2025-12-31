@@ -15,6 +15,11 @@ returns:
 """
 function plot_scatter_and_probs(chain_load_name::String,fig_save_dir::String,fig_save_name::String;my_font_size=12)
 
+    # create the directory where the figures will be saved if it doesn't exist
+    if !isdir(fig_save_dir)
+        mkdir(fig_save_dir)
+    end
+
     # load the results
     my_results=JLD2.load(chain_load_name)
 
@@ -113,6 +118,11 @@ returns:
 """
 function plot_simulated_series(chain_load_name::String,fig_save_dir::String,fig_save_name::String,t_sim::Int;my_font_size=12)
    
+    # create the directory where the figures will be saved if it doesn't exist
+    if !isdir(fig_save_dir)
+        mkdir(fig_save_dir)
+    end
+
     # load the results
     my_results=JLD2.load(chain_load_name)
 
