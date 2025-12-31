@@ -4,6 +4,17 @@ This package hosts the code for the project "Discretization using Clustering and
 
 The code uses a two step procedure to discretize a continuous valued stochastic process. In the first step, k-means of k-medoids clustering is used to select the number of hidden states present in the data based on silhouette scores. In the second step, given the number of hidden states, the codes performs Bayesian estimation of the hidden Markov model parameters using Hamiltonian Monte Carlo. One can then use the estimated transition probabilities and state means in a structural dynamic stochastic general equilibrium model.
 
+The repository includes two data examples: the macroeconomic uncertainty undiex from Jurado, Ludvigson, and Ng (2015) and the geopolitical risk index from Caldara and Iacoviello (2022).
+## Installation
+
+After cloning the repo, run 
+
+```
+julia -e 'using Pkg; Pkg.activate("./env-hmm-jl.1.10/"); Pkg.instantiate()'
+```
+
+This will install all the packages needed to run the code.
+
 ## User Inputs
 
 The user inputs are specified in ``run_sampling.sh``
