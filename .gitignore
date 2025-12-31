@@ -1,0 +1,11 @@
+*.jld2
+*.csv
+*.xl*
+*.odf
+*.pdf
+/tables/*
+!/tables/placeholder.txt
+/data/*
+!/data/macro-uncty-qtrly.csv
+!/data/gpr-qtrly.csv
+scratch_*
